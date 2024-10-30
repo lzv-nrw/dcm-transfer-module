@@ -1,0 +1,5 @@
+FROM lscr.io/linuxserver/openssh-server:latest
+# install rsync
+RUN apk add rsync
+# setup working dir
+RUN mkdir -m 777 /remote_storage
