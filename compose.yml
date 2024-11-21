@@ -3,8 +3,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      secrets:
-        - zivgitlab
     volumes: # define shared file-system and mount at default mount point for app
       - file_storage:/file_storage
     ports:
@@ -13,8 +11,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.swaggerui
-      secrets:
-        - zivgitlab
     ports:
       - "80:8080"
     environment:
@@ -38,8 +34,5 @@ services:
       - "$PWD/test_dcm_transfer_module/remote_storage:/remote_storage"
     ports:
       - 2222:2222
-secrets:
-  zivgitlab:
-    file: ~/.netrc
 volumes: # define docker volume
   file_storage:

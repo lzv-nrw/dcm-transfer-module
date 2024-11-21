@@ -1,12 +1,8 @@
-# modified swagger-ui-image to have a local copy of openapi-document
-# (can therefore be modified with correct server-list)
-
 FROM python:3.10-alpine
 
 RUN mkdir -p /api
-RUN --mount=type=secret,id=zivgitlab,target=/root/.netrc \
-    pip install --upgrade \
-    --extra-index-url https://zivgitlab.uni-muenster.de/api/v4/groups/12466/-/packages/pypi/simple \
+RUN pip install --upgrade \
+    --extra-index-url https://zivgitlab.uni-muenster.de/api/v4/projects/9020/packages/pypi/simple \
     --target /api \
     dcm-transfer-module-api
 
@@ -16,5 +12,5 @@ FROM swaggerapi/swagger-ui
 # copy api-document from first stage into container
 COPY --from=0 /api/dcm_transfer_module_api/openapi.yaml /openapi.yaml
 
-# and modify server-list
+# modify server-list
 # RUN sed -i -e 's/localhost/<server-url>/g' /openapi.yaml

@@ -1,10 +1,12 @@
 from setuptools import setup
 
 setup(
-    version="2.0.0",
+    version="2.0.1",
     name="dcm-transfer-module",
-    description="flask app for transfer-module-containers",
+    description="flask app implementing the DCM Transfer Module API",
     author="LZV.nrw",
+    license="MIT",
+    python_requires=">=3.10",
     install_requires=[
         "flask==3.*",
         "PyYAML==6.*",
