@@ -45,7 +45,9 @@ def app_factory(
 
     # create Orchestrator and OrchestratedView-class
     orchestrator = ScalableOrchestrator(
-        queue=queue or config.queue, registry=registry or config.registry
+        queue=queue or config.queue,
+        registry=registry or config.registry,
+        nprocesses=config.ORCHESTRATION_PROCESSES,
     )
     view = TransferView(
         config=config,

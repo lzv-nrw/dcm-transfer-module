@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.0.2] - 2025-07-25
+
+### Fixed
+
+- fixed initialization of ScalableOrchestrator with ORCHESTRATION_PROCESSES
+
 ## [2.0.1] - 2024-11-21
 
 ### Changed
