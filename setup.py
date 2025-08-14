@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    version="2.0.2",
+    version="2.1.0",
     name="dcm-transfer-module",
     description="flask app implementing the DCM Transfer Module API",
     author="LZV.nrw",
@@ -11,7 +11,7 @@ setup(
         "flask==3.*",
         "PyYAML==6.*",
         "data-plumber-http>=1.0.0,<2",
-        "dcm-common[services, db, orchestration]>=3.11.0,<4",
+        "dcm-common[services, db, orchestration]>=3.25.0,<4",
         "dcm-transfer-module-api>=2.1.0,<3",
     ],
     packages=[

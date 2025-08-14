@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.1.0] - 2025-08-14
+
+### Changed
+
+- migrated to new extension system
+
 ## [2.0.2] - 2025-07-25
 
 ### Fixed

@@ -43,7 +43,7 @@ def test_default_ping(
 ):
     """Test default endpoint `/ping-GET`."""
 
-    run_service(app)
+    run_service(app, probing_path="ready")
 
     response = default_sdk.ping()
 
@@ -55,7 +55,7 @@ def test_default_status(
 ):
     """Test default endpoint `/status-GET`."""
 
-    run_service(app)
+    run_service(app, probing_path="ready")
 
     response = default_sdk.get_status()
 
@@ -68,7 +68,7 @@ def test_default_identify(
 ):
     """Test default endpoint `/identify-GET`."""
 
-    run_service(app)
+    run_service(app, probing_path="ready")
 
     response = default_sdk.identify()
 
@@ -82,7 +82,7 @@ def test_transfer_report(
 ):
     """Test endpoints `/transfer-POST` and `/report-GET`."""
 
-    run_service(app)
+    run_service(app, probing_path="ready")
 
     submission = transfer_sdk.transfer(minimal_request_body)
 
@@ -106,7 +106,7 @@ def test_transfer_report_404(
 ):
     """Test transfer endpoint `/report-GET` without previous submission."""
 
-    run_service(app)
+    run_service(app, probing_path="ready")
 
     with pytest.raises(dcm_transfer_module_sdk.rest.ApiException) as exc_info:
         transfer_sdk.get_report(token="some-token")

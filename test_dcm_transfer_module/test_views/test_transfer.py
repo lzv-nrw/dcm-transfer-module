@@ -27,10 +27,10 @@ def test_app_factory_ssh_fingerprint_config(
     testing_config.SSH_HOST_PUBLIC_KEY = pkey
     testing_config.SSH_HOST_PUBLIC_KEY_ALGORITHM = pkey_alg
     if valid:
-        app_factory(testing_config())
+        app_factory(testing_config(), block=True)
     else:
         with pytest.raises(RuntimeError):
-            app_factory(testing_config())
+            app_factory(testing_config(), block=True)
 
 
 def test_transfer_minimal(
@@ -100,7 +100,7 @@ def test_transfer_dst_exists(
     # setup client with given settings
     class TestingConfig(testing_config):
         OVERWRITE_EXISTING = overwrite_existing
-    client = app_factory(TestingConfig()).test_client()
+    client = app_factory(TestingConfig(), block=True).test_client()
 
     # Create output destination in target
     target_dst = (
@@ -148,7 +148,7 @@ def test_transfer_dst_exists_fail(
     # setup client with given settings
     class TestingConfig(testing_config):
         OVERWRITE_EXISTING = True
-    client = app_factory(TestingConfig()).test_client()
+    client = app_factory(TestingConfig(), block=True).test_client()
 
     # Create output destination in target
     target_dst = (
@@ -258,7 +258,7 @@ def test_transfer_progress(
     # setup client with given settings
     class TestingConfig(testing_config):
         BW_LIMIT = 10
-    client = app_factory(TestingConfig()).test_client()
+    client = app_factory(TestingConfig(), block=True).test_client()
 
     # generate test-data
     test_sip = get_output_path(file_storage)
@@ -318,7 +318,7 @@ def test_transfer_no_connection_remote(
 
     class TestingConfig(testing_config_remote):
         SSH_USERNAME = "foo2"
-    client_remote = app_factory(TestingConfig()).test_client()
+    client_remote = app_factory(TestingConfig(), block=True).test_client()
 
     # submit job
     response = client_remote.post(

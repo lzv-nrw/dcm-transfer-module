@@ -57,6 +57,18 @@ def prepare_key_fixtures(fixtures):
     (fixtures / ".ssh" / "id_rsa_bad").chmod(0o600)
 
 
+@pytest.fixture(scope="session", autouse=True)
+def disable_extension_logging():
+    """
+    Disables the stderr-logging via the helper method `print_status`
+    of the `dcm_common.services.extensions`-subpackage.
+    """
+    # pylint: disable=import-outside-toplevel
+    from dcm_common.services.extensions.common import PrintStatusSettings
+
+    PrintStatusSettings.silent = True
+
+
 @pytest.fixture(name="testing_config")
 def _testing_config(file_storage):
     """Returns test-config"""
@@ -105,7 +117,7 @@ def _client(testing_config):
     """
     Returns test_client.
     """
-    return app_factory(testing_config()).test_client()
+    return app_factory(testing_config(), block=True).test_client()
 
 
 @pytest.fixture(name="client_remote")
@@ -113,7 +125,7 @@ def _client_remote(testing_config_remote):
     """
     Returns test_client for testing_config_remote.
     """
-    return app_factory(testing_config_remote()).test_client()
+    return app_factory(testing_config_remote(), block=True).test_client()
 
 
 @pytest.fixture(name="test_sip")
