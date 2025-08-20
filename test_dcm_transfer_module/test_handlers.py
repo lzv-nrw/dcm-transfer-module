@@ -60,6 +60,27 @@ def _transfer_handler(fixtures):
             },
             Responses.GOOD.status
         ),
+        (
+            {
+                "transfer": {"target": {"path": "test_sip"}},
+                "token": "https://lzv.nrw/callback"
+            },
+            422
+        ),
+        (
+            {
+                "transfer": {"target": {"path": "test_sip"}},
+                "token": "non-uuid"
+            },
+            422
+        ),
+        (
+            {
+                "transfer": {"target": {"path": "test_sip"}},
+                "token": "37ee72d6-80ab-4dcd-a68d-f8d32766c80d"
+            },
+            Responses.GOOD.status
+        ),
     ]),
     ids=[f"stage {i+1}" for i in range(len(pytest_args))]
 )

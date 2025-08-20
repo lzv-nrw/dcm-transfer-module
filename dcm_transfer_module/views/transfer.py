@@ -9,7 +9,7 @@ import tempfile
 import io
 from time import sleep
 
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, Response
 from data_plumber_http.decorators import flask_handler, flask_args, flask_json
 from dcm_common import LoggingContext as Context
 from dcm_common.orchestration import JobConfig, Job
@@ -75,18 +75,28 @@ class TransferView(services.OrchestratedView):
         )
         def transfer(
             transfer: TransferConfig,
+            token: Optional[str] = None,
             callback_url: Optional[str] = None
         ):
             """Submit SIP for transfer to remote system."""
-            token = self.orchestrator.submit(
-                JobConfig(
-                    request_body={
-                        "transfer": transfer.json,
-                        "callback_url": callback_url
-                    },
-                    context=self.NAME
+            try:
+                token = self.orchestrator.submit(
+                    JobConfig(
+                        request_body={
+                            "transfer": transfer.json,
+                            "callback_url": callback_url
+                        },
+                        context=self.NAME
+                    ),
+                    token=token,
                 )
-            )
+            except ValueError as exc_info:
+                return Response(
+                    f"Submission rejected: {exc_info}",
+                    mimetype="text/plain",
+                    status=400,
+                )
+
             return jsonify(token.json), 201
 
         self._register_abort_job(bp, "/transfer")

@@ -3,7 +3,7 @@
 from pathlib import Path
 
 from data_plumber_http import Property, Object, Url
-from dcm_common.services import TargetPath
+from dcm_common.services import TargetPath, UUID
 
 from dcm_transfer_module.models import Target, TransferConfig
 
@@ -32,8 +32,9 @@ def get_transfer_handler(cwd: Path):
                     "target",
                 ]
             ),
+            Property("token"): UUID(),
             Property("callbackUrl", name="callback_url"):
                 Url(schemes=["http", "https"])
         },
-        accept_only=["transfer", "callbackUrl"]
+        accept_only=["transfer", "token", "callbackUrl"]
     ).assemble()
