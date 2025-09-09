@@ -6,7 +6,7 @@ from uuid import uuid4
 import io
 
 import pytest
-from dcm_common.models.report import Progress
+from dcm_common.orchestra.models import Progress
 
 from dcm_transfer_module.components.parser \
     import RegexParser, RsyncProgress, RsyncParser

@@ -10,19 +10,11 @@ import dcm_transfer_module_sdk
 from dcm_transfer_module import app_factory
 
 
-@pytest.fixture(name="app")
-def _app(testing_config):
-    testing_config.ORCHESTRATION_AT_STARTUP = True
-    return app_factory(testing_config(), as_process=True)
-
-
 @pytest.fixture(name="default_sdk", scope="module")
 def _default_sdk():
     return dcm_transfer_module_sdk.DefaultApi(
         dcm_transfer_module_sdk.ApiClient(
-            dcm_transfer_module_sdk.Configuration(
-                host="http://localhost:8080"
-            )
+            dcm_transfer_module_sdk.Configuration(host="http://localhost:8080")
         )
     )
 
@@ -31,19 +23,19 @@ def _default_sdk():
 def _transfer_sdk():
     return dcm_transfer_module_sdk.TransferApi(
         dcm_transfer_module_sdk.ApiClient(
-            dcm_transfer_module_sdk.Configuration(
-                host="http://localhost:8080"
-            )
+            dcm_transfer_module_sdk.Configuration(host="http://localhost:8080")
         )
     )
 
 
 def test_default_ping(
-    default_sdk: dcm_transfer_module_sdk.DefaultApi, app, run_service
+    default_sdk: dcm_transfer_module_sdk.DefaultApi,
+    testing_config,
+    run_service,
 ):
     """Test default endpoint `/ping-GET`."""
 
-    run_service(app, probing_path="ready")
+    run_service(from_factory=lambda: app_factory(testing_config()), port=8080)
 
     response = default_sdk.ping()
 
@@ -51,11 +43,13 @@ def test_default_ping(
 
 
 def test_default_status(
-    default_sdk: dcm_transfer_module_sdk.DefaultApi, app, run_service
+    default_sdk: dcm_transfer_module_sdk.DefaultApi,
+    testing_config,
+    run_service,
 ):
     """Test default endpoint `/status-GET`."""
 
-    run_service(app, probing_path="ready")
+    run_service(from_factory=lambda: app_factory(testing_config()), port=8080)
 
     response = default_sdk.get_status()
 
@@ -63,12 +57,13 @@ def test_default_status(
 
 
 def test_default_identify(
-    default_sdk: dcm_transfer_module_sdk.DefaultApi, app, run_service,
-    testing_config
+    default_sdk: dcm_transfer_module_sdk.DefaultApi,
+    run_service,
+    testing_config,
 ):
     """Test default endpoint `/identify-GET`."""
 
-    run_service(app, probing_path="ready")
+    run_service(from_factory=lambda: app_factory(testing_config()), port=8080)
 
     response = default_sdk.identify()
 
@@ -77,12 +72,13 @@ def test_default_identify(
 
 def test_transfer_report(
     transfer_sdk: dcm_transfer_module_sdk.TransferApi,
-    app, run_service, testing_config,
-    minimal_request_body
+    run_service,
+    testing_config,
+    minimal_request_body,
 ):
     """Test endpoints `/transfer-POST` and `/report-GET`."""
 
-    run_service(app, probing_path="ready")
+    run_service(from_factory=lambda: app_factory(testing_config()), port=8080)
 
     submission = transfer_sdk.transfer(minimal_request_body)
 
@@ -102,11 +98,13 @@ def test_transfer_report(
 
 
 def test_transfer_report_404(
-    transfer_sdk: dcm_transfer_module_sdk.TransferApi, app, run_service
+    transfer_sdk: dcm_transfer_module_sdk.TransferApi,
+    testing_config,
+    run_service,
 ):
     """Test transfer endpoint `/report-GET` without previous submission."""
 
-    run_service(app, probing_path="ready")
+    run_service(from_factory=lambda: app_factory(testing_config()), port=8080)
 
     with pytest.raises(dcm_transfer_module_sdk.rest.ApiException) as exc_info:
         transfer_sdk.get_report(token="some-token")

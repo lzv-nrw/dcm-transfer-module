@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.0] - 2025-09-09
+
+### Changed
+
+- migrated to dcm-common v4
+- **Breaking:** migrated to API v3
+
 ## [2.2.0] - 2025-08-20
 
 ### Added

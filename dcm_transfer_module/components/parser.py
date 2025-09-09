@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 import io
 from threading import Thread, Event
 
-from dcm_common.models.report import Progress
+from dcm_common.orchestra.models import Progress
 
 
 class RegexParser:

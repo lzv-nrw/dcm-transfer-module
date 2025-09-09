@@ -7,7 +7,6 @@ from dcm_common.services.tests import (
 )
 from dcm_common.util import get_output_path
 
-from dcm_transfer_module import app_factory
 from dcm_transfer_module.config import AppConfig
 
 
@@ -74,15 +73,13 @@ def _testing_config(file_storage):
     """Returns test-config"""
     # setup config-class
     class TestingConfig(AppConfig):
-        ORCHESTRATION_AT_STARTUP = False
-        ORCHESTRATION_DAEMON_INTERVAL = 0.001
-        ORCHESTRATION_ORCHESTRATOR_INTERVAL = 0.001
-        ORCHESTRATION_ABORT_NOTIFICATIONS_STARTUP_INTERVAL = 0.01
-
         TESTING = True
         FS_MOUNT_POINT = file_storage
         LOCAL_TRANSFER = True
         REMOTE_DESTINATION = file_storage.resolve() / "remote"
+        ORCHESTRA_DAEMON_INTERVAL = 0.01
+        ORCHESTRA_WORKER_INTERVAL = 0.01
+        ORCHESTRA_WORKER_ARGS = {"messages_interval": 0.01}
 
     return TestingConfig
 
@@ -92,10 +89,6 @@ def _testing_config_remote(testing_config, remote_storage_server):
     """Returns test-config for transfer to remote server"""
     # config for remote server
     class TestingConfig(testing_config):
-        ORCHESTRATION_AT_STARTUP = False
-        ORCHESTRATION_DAEMON_INTERVAL = 0.001
-        ORCHESTRATION_ORCHESTRATOR_INTERVAL = 0.001
-
         LOCAL_TRANSFER = False
         SSH_USERNAME = "foo"
         SSH_PORT = 2222
@@ -110,22 +103,6 @@ def _testing_config_remote(testing_config, remote_storage_server):
         TRANSFER_OPTIONS = ["--chmod=a+rw"]
 
     return TestingConfig
-
-
-@pytest.fixture(name="client")
-def _client(testing_config):
-    """
-    Returns test_client.
-    """
-    return app_factory(testing_config(), block=True).test_client()
-
-
-@pytest.fixture(name="client_remote")
-def _client_remote(testing_config_remote):
-    """
-    Returns test_client for testing_config_remote.
-    """
-    return app_factory(testing_config_remote(), block=True).test_client()
 
 
 @pytest.fixture(name="test_sip")
